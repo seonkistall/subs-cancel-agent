@@ -42,6 +42,7 @@
   .btn:hover{transform:translateY(-1px); box-shadow:0 10px 28px rgba(27,91,255,.34)}
   .btn.ghost{background:transparent;color:var(--accent);box-shadow:none;border:1.5px solid var(--accent)}
   .pill{display:inline-block;font-size:13px;font-weight:600;color:var(--accent);background:#eef3ff;padding:6px 12px;border-radius:999px}
+  .beta{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:#b4530a;background:#fff4e6;border:1px solid #ffd9a8;padding:7px 14px;border-radius:999px}
 
   /* nav */
   nav{position:sticky;top:0;background:rgba(255,255,255,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);z-index:20}
@@ -134,12 +135,13 @@
     <span class="pill">AI 구독 취소 에이전트 · 한국</span>
     <h1>끊고 싶은 구독,<br><span class="hl">우리가 대신 끊어드립니다.</span></h1>
     <p class="sub">넷플릭스, 왓챠, 쿠팡, Claude, GPT… 잊고 새는 구독. 클릭 한 번이면 우리 에이전트가 당신 대신 들어가 취소합니다. 비밀번호는 받지 않아요.</p>
+    <div class="beta">🚧 아직 출시 전 — 지금은 <b>&nbsp;베타 선예약&nbsp;</b>을 받는 중입니다</div>
     <div class="cta-row">
       <!-- ★ EDIT 1: 본인 Toss 결제링크로 교체 -->
       <a class="btn toss-link" data-toss="https://toss.me/your-link" href="#order">₩9,900 지금 선예약하기</a>
       <a class="btn ghost" href="#how">어떻게 작동하나요?</a>
     </div>
-    <p class="micro">출시 시 자동 취소 · 안 되면 <b>전액 환불</b> · 선예약 한정 평생 50% 할인</p>
+    <p class="micro">출시 시 자동 취소 · 안 되면 <b>전액 환불</b> · 선예약 한정가</p>
   </div>
 </header>
 
@@ -187,12 +189,12 @@
 
 <section class="block order" id="order">
   <div class="wrap">
-    <h2 class="sec">선예약하고 평생 50% 할인 받기</h2>
-    <p class="lead">출시 첫 100명 한정. 지금 선예약하면 한 번의 ₩9,900으로 시작합니다.</p>
+    <h2 class="sec">먼저 선예약하기</h2>
+    <p class="lead">아직 출시 전입니다. 지금 ₩9,900 선예약가로 자리만 잡아두세요.</p>
 
     <div class="order-card">
       <h3>구독 취소 선예약</h3>
-      <p class="price"><b>₩9,900</b> · 출시 시 자동 취소 1건 + 평생 50% 할인</p>
+      <p class="price"><b>₩9,900</b> · 출시 시 자동 취소 1건 (선예약가)</p>
 
       <!-- ★ EDIT 2: action을 본인 Formspree 엔드포인트로 교체 (대기자/벤더 수요 수집) -->
       <form action="https://formspree.io/f/XXXXXXX" method="POST">
@@ -232,7 +234,7 @@
     <details><summary>제 비밀번호를 넘겨야 하나요?</summary><p>아니요. 취소는 당신 기기 안에서 당신이 이미 로그인된 세션으로 진행됩니다. 비밀번호는 우리 서버에 저장되지 않습니다.</p></details>
     <details><summary>취소가 안 되면요?</summary><p>전화로만 해지되거나 벤더가 막는 경우, ₩9,900을 전액 환불합니다. 성공한 취소에만 비용을 받습니다.</p></details>
     <details><summary>지금 결제하면 바로 끊어주나요?</summary><p>지금은 선예약 단계입니다. 출시되면 가장 많이 요청된 구독부터 순서대로 자동 취소를 지원하고, 선예약자에게 먼저 알려드립니다.</p></details>
-    <details><summary>왜 ₩9,900인가요?</summary><p>선예약 한정가입니다. 출시 후에는 더 높아지며, 선예약자는 평생 50% 할인을 유지합니다.</p></details>
+    <details><summary>왜 ₩9,900인가요?</summary><p>출시 전 선예약가입니다. 정식 가격은 출시 때 공지하며, 선예약자에게 먼저 알려드립니다.</p></details>
   </div>
 </section>
 
