@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>끊어줌 — 끊고 싶은 구독, 우리가 대신 끊어드립니다</title>
+<meta name="description" content="잊고 새는 구독, 클릭 한 번이면 우리 에이전트가 대신 취소합니다. 안 되면 전액 환불." />
+<!--
+  =========================================================================
+  Phase 0 선예약(pre-order) 검증 랜딩  ·  구독 취소 에이전트
+  목표: "한국인이 취소 대행에 ₩9,900을 내는가" = WTP 신호 측정
+  측정: (1) ₩9,900 결제 수 = 하드 신호  (2) 대기자 폼 제출 = 소프트 관심 + 벤더 수요
+  -------------------------------------------------------------------------
+  ★ 배포 전 4곳만 바꾸세요 (모두 "★ EDIT" 주석으로 표시):
+    1. TOSS 결제 링크   : 아래 data-toss="..." 두 곳 → 본인 Toss 결제링크로 교체
+    2. Formspree ID     : <form action="https://formspree.io/f/XXXXXXX"> → 본인 ID
+    3. 데모 영상        : <div class="demo-frame"> 안에 본인 30초 녹화(유튜브 임베드/gif)로 교체
+    4. 브랜드명         : "끊어줌" → 원하는 이름 (전역 치환)
+  배포: 이 파일 하나를 Vercel/Netlify에 드래그 → 끝. (README.md 참고)
+  =========================================================================
+-->
+<style>
+  :root{
+    --ink:#0f1115; --muted:#6b7280; --line:#e7e8ea; --bg:#ffffff;
+    --accent:#1b5bff; --accent-ink:#ffffff; --soft:#f5f7fb; --ok:#0a9d6e;
+    --maxw:1080px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Malgun Gothic",sans-serif;
+    color:var(--ink); background:var(--bg); line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 22px}
+  a{color:inherit; text-decoration:none}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; justify-content:center;
+    background:var(--accent); color:var(--accent-ink); font-weight:700;
+    padding:15px 26px; border-radius:12px; font-size:17px; border:0; cursor:pointer;
+    transition:transform .06s ease, box-shadow .2s ease; box-shadow:0 6px 22px rgba(27,91,255,.28);
+  }
+  .btn:hover{transform:translateY(-1px); box-shadow:0 10px 28px rgba(27,91,255,.34)}
+  .btn.ghost{background:transparent;color:var(--accent);box-shadow:none;border:1.5px solid var(--accent)}
+  .pill{display:inline-block;font-size:13px;font-weight:600;color:var(--accent);background:#eef3ff;padding:6px 12px;border-radius:999px}
+
+  /* nav */
+  nav{position:sticky;top:0;background:rgba(255,255,255,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);z-index:20}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
+  .logo{font-weight:800;font-size:20px;letter-spacing:-.5px}
+  .logo b{color:var(--accent)}
+
+  /* hero */
+  .hero{padding:78px 0 56px;text-align:center}
+  .hero h1{font-size:clamp(30px,5.4vw,52px);line-height:1.15;letter-spacing:-1.2px;font-weight:800}
+  .hero h1 .hl{color:var(--accent)}
+  .hero p.sub{margin:20px auto 0;max-width:620px;font-size:clamp(16px,2.3vw,20px);color:var(--muted)}
+  .cta-row{margin-top:32px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .micro{margin-top:14px;font-size:13px;color:var(--muted)}
+  .micro b{color:var(--ok)}
+
+  /* demo */
+  .demo{padding:18px 0 10px}
+  .demo-frame{
+    max-width:760px;margin:0 auto;aspect-ratio:16/9;border-radius:18px;border:1px solid var(--line);
+    background:linear-gradient(135deg,#eef3ff,#f7f9ff);display:flex;align-items:center;justify-content:center;
+    color:var(--muted);font-size:15px;text-align:center;padding:24px;overflow:hidden
+  }
+  .demo-frame .play{width:64px;height:64px;border-radius:50%;background:var(--accent);display:grid;place-items:center;margin:0 auto 12px;box-shadow:0 8px 24px rgba(27,91,255,.35)}
+  .demo-frame .play:after{content:"";border-left:18px solid #fff;border-top:11px solid transparent;border-bottom:11px solid transparent;margin-left:4px}
+
+  /* steps */
+  section.block{padding:64px 0;border-top:1px solid var(--line)}
+  h2.sec{font-size:clamp(24px,3.4vw,34px);text-align:center;letter-spacing:-.8px;font-weight:800}
+  h2.sec + p.lead{text-align:center;color:var(--muted);margin:12px auto 0;max-width:560px}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}
+  .step{background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:26px}
+  .step .n{width:34px;height:34px;border-radius:9px;background:var(--accent);color:#fff;font-weight:700;display:grid;place-items:center;margin-bottom:14px}
+  .step h3{font-size:18px;letter-spacing:-.4px}
+  .step p{color:var(--muted);font-size:15px;margin-top:7px}
+
+  /* trust */
+  .trust{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:36px}
+  .trust .card{border:1px solid var(--line);border-radius:14px;padding:22px}
+  .trust .card .ic{font-size:22px}
+  .trust .card h4{margin:8px 0 4px;font-size:16px}
+  .trust .card p{color:var(--muted);font-size:14px}
+
+  /* order form */
+  .order{background:var(--soft)}
+  .order-card{max-width:640px;margin:36px auto 0;background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px}
+  .order-card h3{font-size:20px;letter-spacing:-.4px}
+  .order-card .price{margin:6px 0 2px;font-size:15px;color:var(--muted)}
+  .order-card .price b{color:var(--ink);font-size:26px}
+  .vendors{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:18px 0 6px}
+  .vendors label{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:15px;cursor:pointer;transition:border-color .15s,background .15s}
+  .vendors label:hover{border-color:var(--accent);background:#f3f7ff}
+  .vendors input{accent-color:var(--accent);width:17px;height:17px}
+  .field{margin-top:12px}
+  .field input[type=email]{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:11px;font-size:15px}
+  .field input[type=email]:focus{outline:2px solid var(--accent);border-color:var(--accent)}
+  .order-actions{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+  .order-actions .btn{width:100%}
+  .or{font-size:13px;color:var(--muted);text-align:center;margin-top:4px}
+  .guarantee{margin-top:16px;font-size:13px;color:var(--muted);text-align:center}
+  .guarantee b{color:var(--ok)}
+
+  /* faq */
+  details{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:12px;max-width:680px;margin-left:auto;margin-right:auto}
+  details summary{font-weight:600;cursor:pointer;list-style:none;font-size:16px}
+  details summary::-webkit-details-marker{display:none}
+  details summary:after{content:"+";float:right;color:var(--accent);font-weight:700}
+  details[open] summary:after{content:"–"}
+  details p{color:var(--muted);font-size:15px;margin-top:10px}
+
+  footer{padding:40px 0;border-top:1px solid var(--line);text-align:center;color:var(--muted);font-size:13px}
+
+  @media(max-width:760px){
+    .steps,.trust{grid-template-columns:1fr}
+    .vendors{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">끊어<b>줌</b></div>
+    <a href="#order" class="btn" style="padding:9px 18px;font-size:15px;box-shadow:none">선예약</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="pill">AI 구독 취소 에이전트 · 한국</span>
+    <h1>끊고 싶은 구독,<br><span class="hl">우리가 대신 끊어드립니다.</span></h1>
+    <p class="sub">넷플릭스, 왓챠, 쿠팡, Claude, GPT… 잊고 새는 구독. 클릭 한 번이면 우리 에이전트가 당신 대신 들어가 취소합니다. 비밀번호는 받지 않아요.</p>
+    <div class="cta-row">
+      <!-- ★ EDIT 1: 본인 Toss 결제링크로 교체 -->
+      <a class="btn toss-link" data-toss="https://toss.me/your-link" href="#order">₩9,900 지금 선예약하기</a>
+      <a class="btn ghost" href="#how">어떻게 작동하나요?</a>
+    </div>
+    <p class="micro">출시 시 자동 취소 · 안 되면 <b>전액 환불</b> · 선예약 한정 평생 50% 할인</p>
+  </div>
+</header>
+
+<section class="demo">
+  <div class="wrap">
+    <!-- ★ EDIT 3: 본인 30초 데모(테스트 계정에서 실제 취소 녹화)로 교체. 유튜브면 <iframe>으로. -->
+    <div class="demo-frame">
+      <div>
+        <div class="play"></div>
+        30초 데모 — "버튼 한 번에 구독이 실제로 취소되는 장면"<br>(여기에 본인 화면녹화를 넣으세요)
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="how">
+  <div class="wrap">
+    <h2 class="sec">3단계면 끝납니다</h2>
+    <p class="lead">설정도, 비밀번호 입력도, 전화도 없습니다.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="n">1</div>
+        <h3>끊을 구독 선택</h3>
+        <p>당신이 끊고 싶은 구독을 고르기만 하면 됩니다. 어떤 구독이 얼마씩 새는지도 한눈에.</p>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <h3>에이전트가 자동 취소</h3>
+        <p>당신 기기 안에서, 당신의 로그인 세션으로 에이전트가 직접 취소 단계를 밟습니다. 비밀번호는 우리 서버에 저장되지 않습니다.</p>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <h3>안 되면 전액 환불</h3>
+        <p>전화로만 해지되거나 막히는 경우엔 한 푼도 받지 않습니다. 성공한 취소에만 가치를 냅니다.</p>
+      </div>
+    </div>
+
+    <div class="trust">
+      <div class="card"><div class="ic">🔒</div><h4>비밀번호 안 받습니다</h4><p>온디바이스 방식. 당신 계정 정보가 우리 쪽으로 넘어오지 않습니다.</p></div>
+      <div class="card"><div class="ic">↩️</div><h4>전액 환불 보장</h4><p>취소에 실패하면 ₩9,900 전액을 즉시 돌려드립니다.</p></div>
+      <div class="card"><div class="ic">🇰🇷</div><h4>한국 구독에 진심</h4><p>해외 툴이 못 보는 국내 OTT·결제까지. 한국에서 가장 잘 끊습니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="block order" id="order">
+  <div class="wrap">
+    <h2 class="sec">선예약하고 평생 50% 할인 받기</h2>
+    <p class="lead">출시 첫 100명 한정. 지금 선예약하면 한 번의 ₩9,900으로 시작합니다.</p>
+
+    <div class="order-card">
+      <h3>구독 취소 선예약</h3>
+      <p class="price"><b>₩9,900</b> · 출시 시 자동 취소 1건 + 평생 50% 할인</p>
+
+      <!-- ★ EDIT 2: action을 본인 Formspree 엔드포인트로 교체 (대기자/벤더 수요 수집) -->
+      <form action="https://formspree.io/f/XXXXXXX" method="POST">
+        <p style="font-size:14px;color:var(--muted);margin-top:16px">어떤 구독을 끊고 싶나요? <span style="font-size:12px">(복수 선택 — 우리가 먼저 지원할 순서를 정합니다)</span></p>
+        <div class="vendors">
+          <label><input type="checkbox" name="vendors" value="넷플릭스">넷플릭스</label>
+          <label><input type="checkbox" name="vendors" value="왓챠">왓챠</label>
+          <label><input type="checkbox" name="vendors" value="티빙">티빙</label>
+          <label><input type="checkbox" name="vendors" value="웨이브">웨이브</label>
+          <label><input type="checkbox" name="vendors" value="쿠팡와우">쿠팡 와우</label>
+          <label><input type="checkbox" name="vendors" value="유튜브프리미엄">유튜브 프리미엄</label>
+          <label><input type="checkbox" name="vendors" value="ChatGPT">ChatGPT</label>
+          <label><input type="checkbox" name="vendors" value="Claude">Claude</label>
+          <label><input type="checkbox" name="vendors" value="텔레그램프리미엄">텔레그램 프리미엄</label>
+          <label><input type="checkbox" name="vendors" value="기타SaaS">기타 (해외 SaaS 등)</label>
+        </div>
+        <div class="field">
+          <input type="email" name="email" placeholder="알림 받을 이메일" required />
+        </div>
+
+        <div class="order-actions">
+          <!-- ★ EDIT 1: 본인 Toss 결제링크로 교체. (이 버튼 클릭 = WTP 하드 신호) -->
+          <a class="btn toss-link" data-toss="https://toss.me/your-link" href="https://toss.me/your-link">₩9,900 선예약 결제하기</a>
+          <button class="btn ghost" type="submit">아직 결제는… 무료 대기자로 등록</button>
+        </div>
+        <p class="or">결제 버튼 = 진짜 선예약 · 대기자 버튼 = 출시 알림만</p>
+      </form>
+
+      <p class="guarantee">🔒 비밀번호 안 받음 · ↩️ 실패 시 <b>전액 환불</b></p>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <h2 class="sec">자주 묻는 질문</h2>
+    <details><summary>제 비밀번호를 넘겨야 하나요?</summary><p>아니요. 취소는 당신 기기 안에서 당신이 이미 로그인된 세션으로 진행됩니다. 비밀번호는 우리 서버에 저장되지 않습니다.</p></details>
+    <details><summary>취소가 안 되면요?</summary><p>전화로만 해지되거나 벤더가 막는 경우, ₩9,900을 전액 환불합니다. 성공한 취소에만 비용을 받습니다.</p></details>
+    <details><summary>지금 결제하면 바로 끊어주나요?</summary><p>지금은 선예약 단계입니다. 출시되면 가장 많이 요청된 구독부터 순서대로 자동 취소를 지원하고, 선예약자에게 먼저 알려드립니다.</p></details>
+    <details><summary>왜 ₩9,900인가요?</summary><p>선예약 한정가입니다. 출시 후에는 더 높아지며, 선예약자는 평생 50% 할인을 유지합니다.</p></details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    끊어줌 — 끊고 싶은 구독, 우리가 대신 끊어드립니다.<br>
+    선예약 문의 · contact@example.com &nbsp;·&nbsp; ⓒ 2026
+  </div>
+</footer>
+
+<script>
+  // Toss 링크 동기화: data-toss 값을 모든 결제 버튼에 반영 (한 곳만 바꿔도 전체 적용하고 싶으면 아래 ONE_LINK 사용)
+  // ★ 선택: 여기 한 줄만 바꾸면 모든 결제 버튼에 일괄 적용됩니다.
+  var ONE_LINK = ""; // 예: "https://toss.me/your-link" — 비우면 각 버튼의 data-toss를 그대로 사용
+  document.querySelectorAll('.toss-link').forEach(function(a){
+    var link = ONE_LINK || a.getAttribute('data-toss');
+    if(link){ a.setAttribute('href', link); }
+  });
+  // 간단 클릭 카운트(로컬) — Toss 대시보드 결제수가 진짜 지표지만, 클릭률 참고용
+  document.querySelectorAll('.toss-link').forEach(function(a){
+    a.addEventListener('click', function(){
+      try{ var n=(+localStorage.getItem('preorder_clicks')||0)+1; localStorage.setItem('preorder_clicks', n); }catch(e){}
+    });
+  });
+</script>
+</body>
+</html>
