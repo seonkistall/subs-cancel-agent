@@ -4,120 +4,161 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>끊어줌 — 끊고 싶은 구독, 우리가 대신 끊어드립니다</title>
-<meta name="description" content="잊고 새는 구독, 클릭 한 번이면 우리 에이전트가 대신 취소합니다. 안 되면 전액 환불." />
+<meta name="description" content="잊고 새는 구독, 클릭 한 번이면 우리 에이전트가 대신 취소합니다. 비밀번호는 받지 않아요. 안 되면 전액 환불." />
+<meta property="og:title" content="끊어줌 — 끊고 싶은 구독, 우리가 대신 끊어드립니다" />
+<meta property="og:description" content="버튼 한 번에 AI가 대신 구독을 취소합니다. 안 되면 전액 환불." />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 <!--
   =========================================================================
-  Phase 0 선예약(pre-order) 검증 랜딩  ·  구독 취소 에이전트
-  목표: "한국인이 취소 대행에 ₩9,900을 내는가" = WTP 신호 측정
-  측정: (1) ₩9,900 결제 수 = 하드 신호  (2) 대기자 폼 제출 = 소프트 관심 + 벤더 수요
-  -------------------------------------------------------------------------
-  ★ 배포 전 4곳만 바꾸세요 (모두 "★ EDIT" 주석으로 표시):
-    1. TOSS 결제 링크   : 아래 data-toss="..." 두 곳 → 본인 Toss 결제링크로 교체
-    2. Formspree ID     : <form action="https://formspree.io/f/XXXXXXX"> → 본인 ID
-    3. 데모 영상        : <div class="demo-frame"> 안에 본인 30초 녹화(유튜브 임베드/gif)로 교체
-    4. 브랜드명         : "끊어줌" → 원하는 이름 (전역 치환)
-  배포: 이 파일 하나를 Vercel/Netlify에 드래그 → 끝. (README.md 참고)
+  Phase 0 선예약 랜딩  ·  구독 취소 에이전트   (UI/UX v2)
+  목표: "한국인이 취소 대행에 ₩9,900을 내는가" = WTP 신호
+  ★ 배포 전 수정 (★ EDIT 주석):
+    1. TOSS 결제 링크 : <script>의 ONE_LINK 한 줄
+    2. Formspree ID   : <form action="https://formspree.io/f/XXXXXXX">
+    3. 데모 영상      : 히어로 미리보기는 dashboard.html 목업으로 연결됨(원하면 영상 교체)
+    4. 브랜드명       : "끊어줌" 전역 치환
   =========================================================================
 -->
 <style>
   :root{
-    --ink:#0f1115; --muted:#6b7280; --line:#e7e8ea; --bg:#ffffff;
-    --accent:#1b5bff; --accent-ink:#ffffff; --soft:#f5f7fb; --ok:#0a9d6e;
-    --maxw:1080px;
+    --ink:#0b1020; --muted:#5b6478; --line:#e9ebf0; --bg:#ffffff; --soft:#f6f8fc;
+    --accent:#3b5bfd; --accent2:#7c3aed; --mint:#10b981; --warn:#c2630b;
+    --grad:linear-gradient(135deg,#3b5bfd 0%,#7c3aed 100%);
+    --shadow-sm:0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.07);
+    --shadow-lg:0 24px 48px -24px rgba(43,40,120,.45);
+    --maxw:1120px; --r:16px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{
-    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Malgun Gothic",sans-serif;
+    font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif;
     color:var(--ink); background:var(--bg); line-height:1.55; -webkit-font-smoothing:antialiased;
+    letter-spacing:-.01em;
   }
-  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 22px}
-  a{color:inherit; text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  a{color:inherit;text-decoration:none}
+  .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
   .btn{
-    display:inline-flex; align-items:center; gap:8px; justify-content:center;
-    background:var(--accent); color:var(--accent-ink); font-weight:700;
-    padding:15px 26px; border-radius:12px; font-size:17px; border:0; cursor:pointer;
-    transition:transform .06s ease, box-shadow .2s ease; box-shadow:0 6px 22px rgba(27,91,255,.28);
+    display:inline-flex;align-items:center;gap:8px;justify-content:center;
+    background:var(--grad);color:#fff;font-weight:700;padding:15px 26px;border-radius:13px;
+    font-size:16px;border:0;cursor:pointer;box-shadow:0 10px 24px -8px rgba(59,91,253,.55);
+    transition:transform .12s ease,box-shadow .2s ease,filter .2s ease;
   }
-  .btn:hover{transform:translateY(-1px); box-shadow:0 10px 28px rgba(27,91,255,.34)}
-  .btn.ghost{background:transparent;color:var(--accent);box-shadow:none;border:1.5px solid var(--accent)}
-  .pill{display:inline-block;font-size:13px;font-weight:600;color:var(--accent);background:#eef3ff;padding:6px 12px;border-radius:999px}
-  .beta{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:#b4530a;background:#fff4e6;border:1px solid #ffd9a8;padding:7px 14px;border-radius:999px}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 16px 32px -8px rgba(59,91,253,.6);filter:saturate(1.08)}
+  .btn:active{transform:translateY(0)}
+  .btn.ghost{background:#fff;color:var(--accent);box-shadow:inset 0 0 0 1.5px rgba(59,91,253,.35)}
+  .btn.ghost:hover{box-shadow:inset 0 0 0 1.5px var(--accent);background:#f7f9ff}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--accent);background:#eef2ff;padding:7px 13px;border-radius:999px}
+  .beta{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--warn);background:#fff5e9;border:1px solid #ffdcb0;padding:7px 14px;border-radius:999px}
 
   /* nav */
-  nav{position:sticky;top:0;background:rgba(255,255,255,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);z-index:20}
-  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
-  .logo{font-weight:800;font-size:20px;letter-spacing:-.5px}
-  .logo b{color:var(--accent)}
+  nav{position:sticky;top:0;background:rgba(255,255,255,.72);backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line);z-index:30}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{font-weight:800;font-size:21px;letter-spacing:-.04em;display:flex;align-items:center;gap:8px}
+  .logo .dot{width:24px;height:24px;border-radius:8px;background:var(--grad);display:inline-block}
+  .logo span{}.logo b{color:var(--accent)}
+  .nav-cta{padding:9px 18px;font-size:14.5px;box-shadow:none}
 
   /* hero */
-  .hero{padding:78px 0 56px;text-align:center}
-  .hero h1{font-size:clamp(30px,5.4vw,52px);line-height:1.15;letter-spacing:-1.2px;font-weight:800}
-  .hero h1 .hl{color:var(--accent)}
-  .hero p.sub{margin:20px auto 0;max-width:620px;font-size:clamp(16px,2.3vw,20px);color:var(--muted)}
-  .cta-row{margin-top:32px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-  .micro{margin-top:14px;font-size:13px;color:var(--muted)}
-  .micro b{color:var(--ok)}
+  .hero{position:relative;overflow:hidden;padding:72px 0 40px;text-align:center}
+  .hero:before,.hero:after{content:"";position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;z-index:0}
+  .hero:before{width:520px;height:520px;background:radial-gradient(circle,#7c9bff,transparent 60%);top:-180px;left:-120px}
+  .hero:after{width:480px;height:480px;background:radial-gradient(circle,#c9b3ff,transparent 60%);top:-120px;right:-140px}
+  .hero .wrap{position:relative;z-index:1}
+  .hero h1{font-size:clamp(32px,5.6vw,58px);line-height:1.1;letter-spacing:-.04em;font-weight:800;margin-top:18px}
+  .hero p.sub{margin:20px auto 0;max-width:600px;font-size:clamp(16px,2.3vw,20px);color:var(--muted)}
+  .cta-row{margin-top:30px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .micro{margin-top:15px;font-size:13.5px;color:var(--muted)}
+  .micro b{color:var(--mint)}
+  .chips{margin-top:26px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .chips .c{font-size:12.5px;font-weight:600;color:#46506a;background:#fff;border:1px solid var(--line);padding:6px 12px;border-radius:999px;box-shadow:var(--shadow-sm)}
 
-  /* demo */
-  .demo{padding:18px 0 10px}
-  .demo-frame{
-    max-width:760px;margin:0 auto;aspect-ratio:16/9;border-radius:18px;border:1px solid var(--line);
-    background:linear-gradient(135deg,#eef3ff,#f7f9ff);display:flex;align-items:center;justify-content:center;
-    color:var(--muted);font-size:15px;text-align:center;padding:24px;overflow:hidden
-  }
-  .demo-frame .play{width:64px;height:64px;border-radius:50%;background:var(--accent);display:grid;place-items:center;margin:0 auto 12px;box-shadow:0 8px 24px rgba(27,91,255,.35)}
-  .demo-frame .play:after{content:"";border-left:18px solid #fff;border-top:11px solid transparent;border-bottom:11px solid transparent;margin-left:4px}
+  /* hero preview (browser frame) */
+  .preview{position:relative;z-index:1;max-width:720px;margin:40px auto 0}
+  .browser{border-radius:18px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow-lg);overflow:hidden;text-align:left;transition:transform .3s ease}
+  .browser:hover{transform:translateY(-4px)}
+  .bbar{display:flex;align-items:center;gap:7px;padding:12px 16px;border-bottom:1px solid var(--line);background:#fbfcfe}
+  .bbar i{width:11px;height:11px;border-radius:50%;display:block}
+  .bbar i:nth-child(1){background:#ff5f57}.bbar i:nth-child(2){background:#febc2e}.bbar i:nth-child(3){background:#28c840}
+  .bbar .url{margin-left:10px;font-size:12px;color:#9aa3b5;background:#fff;border:1px solid var(--line);border-radius:7px;padding:4px 12px}
+  .bbody{padding:18px}
+  .prow{display:flex;align-items:center;gap:13px;padding:12px;border-radius:12px;transition:background .15s}
+  .prow + .prow{margin-top:6px}
+  .prow:hover{background:var(--soft)}
+  .pico{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;flex:none}
+  .pmeta{flex:1;min-width:0}
+  .pmeta .pn{font-weight:700;font-size:14.5px}
+  .pmeta .pd{font-size:12.5px;color:var(--muted);margin-top:1px}
+  .pamt{font-weight:800;font-size:14.5px;margin-right:4px}
+  .pkill{border:1.5px solid var(--accent);color:var(--accent);background:#fff;font-weight:700;font-size:13px;padding:7px 14px;border-radius:9px;flex:none}
+  .preview .hint{text-align:center;margin-top:14px;font-size:13.5px;color:var(--muted)}
 
-  /* steps */
-  section.block{padding:64px 0;border-top:1px solid var(--line)}
-  h2.sec{font-size:clamp(24px,3.4vw,34px);text-align:center;letter-spacing:-.8px;font-weight:800}
-  h2.sec + p.lead{text-align:center;color:var(--muted);margin:12px auto 0;max-width:560px}
-  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}
-  .step{background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:26px}
-  .step .n{width:34px;height:34px;border-radius:9px;background:var(--accent);color:#fff;font-weight:700;display:grid;place-items:center;margin-bottom:14px}
-  .step h3{font-size:18px;letter-spacing:-.4px}
-  .step p{color:var(--muted);font-size:15px;margin-top:7px}
+  /* sections */
+  section.block{padding:74px 0;border-top:1px solid var(--line)}
+  .eyebrow{text-align:center;font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--accent);text-transform:uppercase}
+  h2.sec{font-size:clamp(25px,3.6vw,36px);text-align:center;letter-spacing:-.03em;font-weight:800;margin-top:8px}
+  h2.sec + p.lead{text-align:center;color:var(--muted);margin:13px auto 0;max-width:560px;font-size:17px}
 
-  /* trust */
-  .trust{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:36px}
-  .trust .card{border:1px solid var(--line);border-radius:14px;padding:22px}
-  .trust .card .ic{font-size:22px}
-  .trust .card h4{margin:8px 0 4px;font-size:16px}
-  .trust .card p{color:var(--muted);font-size:14px}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:46px}
+  .step{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:28px;box-shadow:var(--shadow-sm);transition:transform .2s,box-shadow .2s}
+  .step:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+  .step .n{width:42px;height:42px;border-radius:12px;background:var(--grad);color:#fff;font-weight:800;display:grid;place-items:center;margin-bottom:16px;font-size:18px}
+  .step h3{font-size:18.5px;letter-spacing:-.02em}
+  .step p{color:var(--muted);font-size:15px;margin-top:8px}
 
-  /* order form */
-  .order{background:var(--soft)}
-  .order-card{max-width:640px;margin:36px auto 0;background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px}
-  .order-card h3{font-size:20px;letter-spacing:-.4px}
-  .order-card .price{margin:6px 0 2px;font-size:15px;color:var(--muted)}
-  .order-card .price b{color:var(--ink);font-size:26px}
-  .vendors{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:18px 0 6px}
-  .vendors label{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:15px;cursor:pointer;transition:border-color .15s,background .15s}
-  .vendors label:hover{border-color:var(--accent);background:#f3f7ff}
-  .vendors input{accent-color:var(--accent);width:17px;height:17px}
-  .field{margin-top:12px}
-  .field input[type=email]{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:11px;font-size:15px}
-  .field input[type=email]:focus{outline:2px solid var(--accent);border-color:var(--accent)}
+  .trust{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:42px}
+  .tcard{border:1px solid var(--line);border-radius:var(--r);padding:24px;background:linear-gradient(180deg,#fff,#fbfcff)}
+  .tcard .ic{width:44px;height:44px;border-radius:12px;background:#eef2ff;display:grid;place-items:center;font-size:21px}
+  .tcard h4{margin:13px 0 5px;font-size:16.5px}
+  .tcard p{color:var(--muted);font-size:14.5px}
+
+  /* order */
+  .order{background:radial-gradient(120% 100% at 50% 0,#eef2ff 0,#fff 55%)}
+  .order-card{max-width:660px;margin:42px auto 0;background:#fff;border:1px solid var(--line);border-radius:22px;padding:34px;box-shadow:var(--shadow-lg)}
+  .order-card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+  .order-card h3{font-size:21px;letter-spacing:-.02em}
+  .order-card .price{font-size:15px;color:var(--muted);margin-top:3px}
+  .order-card .price b{color:var(--ink);font-size:30px;letter-spacing:-.03em}
+  .order-card .save-tag{font-size:12.5px;font-weight:700;color:var(--mint);background:#e7f9f1;padding:7px 12px;border-radius:999px;white-space:nowrap}
+  .lbl{font-size:14px;color:var(--muted);margin:22px 0 10px;font-weight:600}
+  .vendors{display:flex;flex-wrap:wrap;gap:9px}
+  .vendors label{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--line);border-radius:11px;padding:9px 14px;font-size:14.5px;font-weight:600;cursor:pointer;transition:.15s;user-select:none}
+  .vendors label:hover{border-color:#c3cdfb;background:#f7f9ff}
+  .vendors input{position:absolute;opacity:0;width:0;height:0}
+  .vendors input:checked + span{}
+  .vendors label:has(input:checked){border-color:var(--accent);background:#eef2ff;color:var(--accent)}
+  .field{margin-top:16px}
+  .field input[type=email]{width:100%;padding:14px 16px;border:1.5px solid var(--line);border-radius:12px;font-size:15px;font-family:inherit;transition:.15s}
+  .field input[type=email]:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 4px rgba(59,91,253,.12)}
   .order-actions{margin-top:18px;display:flex;flex-direction:column;gap:10px}
-  .order-actions .btn{width:100%}
-  .or{font-size:13px;color:var(--muted);text-align:center;margin-top:4px}
-  .guarantee{margin-top:16px;font-size:13px;color:var(--muted);text-align:center}
-  .guarantee b{color:var(--ok)}
+  .order-actions .btn{width:100%;font-size:17px;padding:16px}
+  .or{font-size:13px;color:var(--muted);text-align:center}
+  .guarantee{margin-top:16px;font-size:13px;color:var(--muted);text-align:center;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+  .guarantee b{color:var(--mint)}
 
   /* faq */
-  details{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:12px;max-width:680px;margin-left:auto;margin-right:auto}
-  details summary{font-weight:600;cursor:pointer;list-style:none;font-size:16px}
-  details summary::-webkit-details-marker{display:none}
-  details summary:after{content:"+";float:right;color:var(--accent);font-weight:700}
-  details[open] summary:after{content:"–"}
-  details p{color:var(--muted);font-size:15px;margin-top:10px}
+  .faqs{max-width:700px;margin:42px auto 0}
+  details{border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:12px;background:#fff;transition:box-shadow .2s}
+  details[open]{box-shadow:var(--shadow-sm)}
+  summary{font-weight:700;cursor:pointer;list-style:none;font-size:16.5px;display:flex;justify-content:space-between;align-items:center}
+  summary::-webkit-details-marker{display:none}
+  summary .pm{color:var(--accent);font-weight:800;font-size:20px;transition:transform .2s}
+  details[open] summary .pm{transform:rotate(45deg)}
+  details p{color:var(--muted);font-size:15px;margin-top:12px}
 
-  footer{padding:40px 0;border-top:1px solid var(--line);text-align:center;color:var(--muted);font-size:13px}
+  footer{padding:48px 0;border-top:1px solid var(--line);text-align:center;color:var(--muted);font-size:13.5px;background:var(--soft)}
+  footer .logo{justify-content:center;margin-bottom:10px;font-size:18px}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 
   @media(max-width:760px){
     .steps,.trust{grid-template-columns:1fr}
-    .vendors{grid-template-columns:1fr}
+    .hero{padding:54px 0 24px}
   }
 </style>
 </head>
@@ -125,143 +166,140 @@
 
 <nav>
   <div class="wrap">
-    <div class="logo">끊어<b>줌</b></div>
-    <a href="#order" class="btn" style="padding:9px 18px;font-size:15px;box-shadow:none">선예약</a>
+    <div class="logo"><span class="dot"></span><span>끊어<b>줌</b></span></div>
+    <a href="#order" class="btn nav-cta">선예약</a>
   </div>
 </nav>
 
 <header class="hero">
   <div class="wrap">
-    <span class="pill">AI 구독 취소 에이전트 · 한국</span>
-    <h1>끊고 싶은 구독,<br><span class="hl">우리가 대신 끊어드립니다.</span></h1>
-    <p class="sub">넷플릭스, 왓챠, 쿠팡, Claude, GPT… 잊고 새는 구독. 클릭 한 번이면 우리 에이전트가 당신 대신 들어가 취소합니다. 비밀번호는 받지 않아요.</p>
-    <div class="beta">🚧 아직 출시 전 — 지금은 <b>&nbsp;베타 선예약&nbsp;</b>을 받는 중입니다</div>
+    <span class="beta">🚧 아직 출시 전 — 지금은 <b>&nbsp;베타 선예약&nbsp;</b>을 받는 중입니다</span>
+    <h1>끊고 싶은 구독,<br><span class="grad-text">우리가 대신 끊어드립니다.</span></h1>
+    <p class="sub">넷플릭스, 왓챠, 쿠팡, Claude, GPT… 잊고 새는 구독. 버튼 한 번이면 우리 에이전트가 당신 대신 들어가 취소합니다. 비밀번호는 받지 않아요.</p>
     <div class="cta-row">
-      <!-- ★ EDIT 1: 본인 Toss 결제링크로 교체 -->
-      <a class="btn toss-link" data-toss="https://toss.me/your-link" href="#order">₩9,900 지금 선예약하기</a>
+      <a class="btn" href="#order">₩9,900 지금 선예약하기</a>
       <a class="btn ghost" href="#how">어떻게 작동하나요?</a>
     </div>
-    <p class="micro">출시 시 자동 취소 · 안 되면 <b>전액 환불</b> · 선예약 한정가</p>
+    <p class="micro">출시 시 자동 취소 · 안 되면 <b>전액 환불</b> · 선예약가</p>
+    <div class="chips">
+      <span class="c">넷플릭스</span><span class="c">왓챠</span><span class="c">티빙</span><span class="c">쿠팡 와우</span><span class="c">ChatGPT</span><span class="c">Claude</span><span class="c">유튜브 프리미엄</span><span class="c">+더보기</span>
+    </div>
+
+    <a class="preview reveal" href="dashboard.html" aria-label="샘플 대시보드 열기">
+      <div class="browser">
+        <div class="bbar"><i></i><i></i><i></i><span class="url">끊어줌 — 내 구독 대시보드</span></div>
+        <div class="bbody">
+          <div class="prow"><div class="pico" style="background:#e50914">N</div><div class="pmeta"><div class="pn">넷플릭스 · 프리미엄</div><div class="pd">매월 14일 결제</div></div><div class="pamt">₩17,000</div><span class="pkill">끊기</span></div>
+          <div class="prow"><div class="pico" style="background:#d97757">C</div><div class="pmeta"><div class="pn">Claude Pro</div><div class="pd">매월 5일 결제 · 💤 미사용</div></div><div class="pamt">$20</div><span class="pkill">끊기</span></div>
+          <div class="prow"><div class="pico" style="background:#3ecf8e">S</div><div class="pmeta"><div class="pn">Supabase Pro</div><div class="pd">매월 1일 결제 · 💤 미사용</div></div><div class="pamt">$25</div><span class="pkill">끊기</span></div>
+        </div>
+      </div>
+      <p class="hint">👆 인터랙티브 미리보기 — 클릭해서 직접 ‘끊기’를 눌러보세요</p>
+    </a>
   </div>
 </header>
 
-<section class="demo">
-  <div class="wrap">
-    <!-- ★ EDIT 3: 본인 30초 데모(테스트 계정에서 실제 취소 녹화)로 교체. 지금은 인터랙티브 목업으로 연결. -->
-    <a href="dashboard.html" style="display:block">
-      <div class="demo-frame">
-        <div>
-          <div class="play"></div>
-          인터랙티브 미리보기 — 직접 '끊기'를 눌러보세요<br><span style="font-size:13px">(여기에 본인 30초 화면녹화를 넣어도 됩니다)</span>
-        </div>
-      </div>
-    </a>
-    <p style="text-align:center;margin-top:14px"><a href="dashboard.html" class="btn ghost" style="font-size:15px;padding:11px 20px">🖥️ 샘플 대시보드 열어보기 →</a></p>
-  </div>
-</section>
-
 <section class="block" id="how">
   <div class="wrap">
-    <h2 class="sec">3단계면 끝납니다</h2>
-    <p class="lead">설정도, 비밀번호 입력도, 전화도 없습니다.</p>
+    <p class="eyebrow reveal">How it works</p>
+    <h2 class="sec reveal">3단계면 끝납니다</h2>
+    <p class="lead reveal">설정도, 비밀번호 입력도, 전화도 없습니다.</p>
     <div class="steps">
-      <div class="step">
-        <div class="n">1</div>
-        <h3>끊을 구독 선택</h3>
-        <p>당신이 끊고 싶은 구독을 고르기만 하면 됩니다. 어떤 구독이 얼마씩 새는지도 한눈에.</p>
-      </div>
-      <div class="step">
-        <div class="n">2</div>
-        <h3>에이전트가 자동 취소</h3>
-        <p>당신 기기 안에서, 당신의 로그인 세션으로 에이전트가 직접 취소 단계를 밟습니다. 비밀번호는 우리 서버에 저장되지 않습니다.</p>
-      </div>
-      <div class="step">
-        <div class="n">3</div>
-        <h3>안 되면 전액 환불</h3>
-        <p>전화로만 해지되거나 막히는 경우엔 한 푼도 받지 않습니다. 성공한 취소에만 가치를 냅니다.</p>
-      </div>
+      <div class="step reveal"><div class="n">1</div><h3>끊을 구독 선택</h3><p>끊고 싶은 구독을 고르기만 하면 됩니다. 어떤 구독이 얼마씩 새는지도 한눈에.</p></div>
+      <div class="step reveal"><div class="n">2</div><h3>에이전트가 자동 취소</h3><p>당신 기기 안에서, 당신의 로그인 세션으로 에이전트가 직접 취소 단계를 밟습니다. 비밀번호는 우리 서버에 저장되지 않습니다.</p></div>
+      <div class="step reveal"><div class="n">3</div><h3>안 되면 전액 환불</h3><p>전화로만 해지되거나 막히는 경우엔 한 푼도 받지 않습니다. 성공한 취소에만 가치를 냅니다.</p></div>
     </div>
 
     <div class="trust">
-      <div class="card"><div class="ic">🔒</div><h4>비밀번호 안 받습니다</h4><p>온디바이스 방식. 당신 계정 정보가 우리 쪽으로 넘어오지 않습니다.</p></div>
-      <div class="card"><div class="ic">↩️</div><h4>전액 환불 보장</h4><p>취소에 실패하면 ₩9,900 전액을 즉시 돌려드립니다.</p></div>
-      <div class="card"><div class="ic">🇰🇷</div><h4>한국 구독에 진심</h4><p>해외 툴이 못 보는 국내 OTT·결제까지. 한국에서 가장 잘 끊습니다.</p></div>
+      <div class="tcard reveal"><div class="ic">🔒</div><h4>비밀번호 안 받습니다</h4><p>온디바이스 방식. 당신 계정 정보가 우리 쪽으로 넘어오지 않습니다.</p></div>
+      <div class="tcard reveal"><div class="ic">↩️</div><h4>전액 환불 보장</h4><p>취소에 실패하면 ₩9,900 전액을 즉시 돌려드립니다.</p></div>
+      <div class="tcard reveal"><div class="ic">🇰🇷</div><h4>한국 구독에 진심</h4><p>해외 툴이 못 보는 국내 OTT·결제까지. 한국에서 가장 잘 끊습니다.</p></div>
     </div>
   </div>
 </section>
 
 <section class="block order" id="order">
   <div class="wrap">
-    <h2 class="sec">먼저 선예약하기</h2>
-    <p class="lead">아직 출시 전입니다. 지금 ₩9,900 선예약가로 자리만 잡아두세요.</p>
+    <p class="eyebrow reveal">Pre-order</p>
+    <h2 class="sec reveal">먼저 선예약하기</h2>
+    <p class="lead reveal">아직 출시 전입니다. 지금 ₩9,900 선예약가로 자리만 잡아두세요.</p>
 
-    <div class="order-card">
-      <h3>구독 취소 선예약</h3>
-      <p class="price"><b>₩9,900</b> · 출시 시 자동 취소 1건 (선예약가)</p>
+    <div class="order-card reveal">
+      <div class="top">
+        <div>
+          <h3>구독 취소 선예약</h3>
+          <p class="price"><b>₩9,900</b> · 출시 시 자동 취소 1건</p>
+        </div>
+        <span class="save-tag">실패 시 전액 환불</span>
+      </div>
 
-      <!-- ★ EDIT 2: action을 본인 Formspree 엔드포인트로 교체 (대기자/벤더 수요 수집) -->
+      <!-- ★ EDIT 2: action을 본인 Formspree 엔드포인트로 교체 -->
       <form action="https://formspree.io/f/XXXXXXX" method="POST">
-        <p style="font-size:14px;color:var(--muted);margin-top:16px">어떤 구독을 끊고 싶나요? <span style="font-size:12px">(복수 선택 — 우리가 먼저 지원할 순서를 정합니다)</span></p>
+        <p class="lbl">어떤 구독을 끊고 싶나요? <span style="font-weight:400">(복수 선택 — 우리가 먼저 지원할 순서를 정합니다)</span></p>
         <div class="vendors">
-          <label><input type="checkbox" name="vendors" value="넷플릭스">넷플릭스</label>
-          <label><input type="checkbox" name="vendors" value="왓챠">왓챠</label>
-          <label><input type="checkbox" name="vendors" value="티빙">티빙</label>
-          <label><input type="checkbox" name="vendors" value="웨이브">웨이브</label>
-          <label><input type="checkbox" name="vendors" value="쿠팡와우">쿠팡 와우</label>
-          <label><input type="checkbox" name="vendors" value="유튜브프리미엄">유튜브 프리미엄</label>
-          <label><input type="checkbox" name="vendors" value="ChatGPT">ChatGPT</label>
-          <label><input type="checkbox" name="vendors" value="Claude">Claude</label>
-          <label><input type="checkbox" name="vendors" value="텔레그램프리미엄">텔레그램 프리미엄</label>
-          <label><input type="checkbox" name="vendors" value="기타SaaS">기타 (해외 SaaS 등)</label>
+          <label><input type="checkbox" name="vendors" value="넷플릭스"><span>넷플릭스</span></label>
+          <label><input type="checkbox" name="vendors" value="왓챠"><span>왓챠</span></label>
+          <label><input type="checkbox" name="vendors" value="티빙"><span>티빙</span></label>
+          <label><input type="checkbox" name="vendors" value="웨이브"><span>웨이브</span></label>
+          <label><input type="checkbox" name="vendors" value="쿠팡와우"><span>쿠팡 와우</span></label>
+          <label><input type="checkbox" name="vendors" value="유튜브프리미엄"><span>유튜브 프리미엄</span></label>
+          <label><input type="checkbox" name="vendors" value="ChatGPT"><span>ChatGPT</span></label>
+          <label><input type="checkbox" name="vendors" value="Claude"><span>Claude</span></label>
+          <label><input type="checkbox" name="vendors" value="텔레그램프리미엄"><span>텔레그램 프리미엄</span></label>
+          <label><input type="checkbox" name="vendors" value="기타SaaS"><span>기타 (해외 SaaS 등)</span></label>
         </div>
         <div class="field">
           <input type="email" name="email" placeholder="알림 받을 이메일" required />
         </div>
-
         <div class="order-actions">
-          <!-- ★ EDIT 1: 본인 Toss 결제링크로 교체. (이 버튼 클릭 = WTP 하드 신호) -->
+          <!-- ★ EDIT 1: ONE_LINK(아래 script)에 Toss 결제링크 넣으면 이 버튼에 일괄 적용 -->
           <a class="btn toss-link" data-toss="https://toss.me/your-link" href="https://toss.me/your-link">₩9,900 선예약 결제하기</a>
           <button class="btn ghost" type="submit">아직 결제는… 무료 대기자로 등록</button>
         </div>
         <p class="or">결제 버튼 = 진짜 선예약 · 대기자 버튼 = 출시 알림만</p>
       </form>
 
-      <p class="guarantee">🔒 비밀번호 안 받음 · ↩️ 실패 시 <b>전액 환불</b></p>
+      <p class="guarantee"><span>🔒 비밀번호 안 받음</span><span>↩️ 실패 시 <b>전액 환불</b></span><span>🇰🇷 한국 구독 특화</span></p>
     </div>
   </div>
 </section>
 
 <section class="block">
   <div class="wrap">
-    <h2 class="sec">자주 묻는 질문</h2>
-    <details><summary>제 비밀번호를 넘겨야 하나요?</summary><p>아니요. 취소는 당신 기기 안에서 당신이 이미 로그인된 세션으로 진행됩니다. 비밀번호는 우리 서버에 저장되지 않습니다.</p></details>
-    <details><summary>취소가 안 되면요?</summary><p>전화로만 해지되거나 벤더가 막는 경우, ₩9,900을 전액 환불합니다. 성공한 취소에만 비용을 받습니다.</p></details>
-    <details><summary>지금 결제하면 바로 끊어주나요?</summary><p>지금은 선예약 단계입니다. 출시되면 가장 많이 요청된 구독부터 순서대로 자동 취소를 지원하고, 선예약자에게 먼저 알려드립니다.</p></details>
-    <details><summary>왜 ₩9,900인가요?</summary><p>출시 전 선예약가입니다. 정식 가격은 출시 때 공지하며, 선예약자에게 먼저 알려드립니다.</p></details>
+    <p class="eyebrow reveal">FAQ</p>
+    <h2 class="sec reveal">자주 묻는 질문</h2>
+    <div class="faqs">
+      <details class="reveal"><summary>제 비밀번호를 넘겨야 하나요? <span class="pm">+</span></summary><p>아니요. 취소는 당신 기기 안에서 당신이 이미 로그인된 세션으로 진행됩니다. 비밀번호는 우리 서버에 저장되지 않습니다.</p></details>
+      <details class="reveal"><summary>취소가 안 되면요? <span class="pm">+</span></summary><p>전화로만 해지되거나 벤더가 막는 경우, ₩9,900을 전액 환불합니다. 성공한 취소에만 비용을 받습니다.</p></details>
+      <details class="reveal"><summary>지금 결제하면 바로 끊어주나요? <span class="pm">+</span></summary><p>지금은 선예약 단계입니다. 출시되면 가장 많이 요청된 구독부터 순서대로 자동 취소를 지원하고, 선예약자에게 먼저 알려드립니다.</p></details>
+      <details class="reveal"><summary>왜 ₩9,900인가요? <span class="pm">+</span></summary><p>출시 전 선예약가입니다. 정식 가격은 출시 때 공지하며, 선예약자에게 먼저 알려드립니다.</p></details>
+    </div>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    끊어줌 — 끊고 싶은 구독, 우리가 대신 끊어드립니다.<br>
+    <div class="logo"><span class="dot"></span><span>끊어<b>줌</b></span></div>
+    끊고 싶은 구독, 우리가 대신 끊어드립니다.<br>
     선예약 문의 · contact@example.com &nbsp;·&nbsp; ⓒ 2026
   </div>
 </footer>
 
 <script>
-  // Toss 링크 동기화: data-toss 값을 모든 결제 버튼에 반영 (한 곳만 바꿔도 전체 적용하고 싶으면 아래 ONE_LINK 사용)
-  // ★ 선택: 여기 한 줄만 바꾸면 모든 결제 버튼에 일괄 적용됩니다.
-  var ONE_LINK = ""; // 예: "https://toss.me/your-link" — 비우면 각 버튼의 data-toss를 그대로 사용
+  // ★ EDIT 1: 여기 한 줄만 본인 Toss 결제링크로 바꾸면 모든 결제 버튼에 일괄 적용됩니다.
+  var ONE_LINK = ""; // 예: "https://toss.me/your-link"  (비우면 placeholder 유지)
   document.querySelectorAll('.toss-link').forEach(function(a){
     var link = ONE_LINK || a.getAttribute('data-toss');
     if(link){ a.setAttribute('href', link); }
-  });
-  // 간단 클릭 카운트(로컬) — Toss 대시보드 결제수가 진짜 지표지만, 클릭률 참고용
-  document.querySelectorAll('.toss-link').forEach(function(a){
     a.addEventListener('click', function(){
       try{ var n=(+localStorage.getItem('preorder_clicks')||0)+1; localStorage.setItem('preorder_clicks', n); }catch(e){}
     });
   });
+  // 스크롤 등장 모션
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:.12});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
 </script>
 </body>
 </html>
