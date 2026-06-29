@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>샌드박스 — 내 구독 (PRE)</title>
+<link rel="stylesheet" href="sandbox.css" />
+</head>
+<body>
+  <div class="card">
+    <h1>샌드박스 스트리밍 · 구독 관리</h1>
+    <p class="sub">이 페이지는 PRE-STATE 입니다. 확장 팝업에서 “이 탭의 구독 취소 실행”을 누르세요.</p>
+
+    <div class="status">
+      <div class="plan">Pro 플랜</div>
+      <!-- capturePre reads #status text. 'Renews / 자동 갱신' = active. -->
+      <div class="renew" id="status">자동 갱신: 2026-07-28 (Renews monthly · ₩13,900)</div>
+    </div>
+
+    <div class="row">
+      <button id="manage-link" class="primary" data-next="manage.html">구독 관리</button>
+    </div>
+
+    <div class="flow">flow: subscriptions → manage → [2fa] → retention → reason → confirm → done</div>
+  </div>
+  <script src="sandbox.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font: 15px/1.55 -apple-system, "Malgun Gothic", sans-serif; color: #19191c; background: #f4f6fb; -webkit-font-smoothing: antialiased; }
+.card { max-width: 520px; margin: 56px auto; background: #fff; border: 1px solid #e8e7e3; border-radius: 14px; padding: 30px; box-shadow: 0 1px 2px rgba(17,17,17,.05); }
+h1 { font-size: 20px; letter-spacing: -.02em; }
+p.sub { color: #6a6e76; font-size: 14px; margin-top: 6px; }
+.status { margin: 22px 0; padding: 16px; border: 1px solid #e8e7e3; border-radius: 10px; background: #fafafa; }
+.status .plan { font-weight: 700; }
+.status .renew { color: #6a6e76; font-size: 13px; margin-top: 4px; }
+button, .btn { font: inherit; font-weight: 600; border-radius: 9px; cursor: pointer; padding: 11px 18px; border: 1px solid #e3e3e0; background: #fff; color: #19191c; }
+button.primary { background: #19191c; color: #fff; border-color: #19191c; }
+button.danger { color: #d33; border-color: #f1c7c7; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+.row { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
+a.link { color: #2f54e0; font-weight: 600; }
+input[type=text], select { font: inherit; width: 100%; padding: 12px 14px; border: 1px solid #e3e3e0; border-radius: 9px; margin-top: 8px; }
+.modal { margin-top: 18px; border: 2px dashed #f1c27d; background: #fff8ef; border-radius: 10px; padding: 18px; }
+.modal b { color: #c2630b; }
+.badge { position: fixed; top: 10px; right: 12px; font: 11px ui-monospace, monospace; color: #6a6e76; background: #fff; border: 1px solid #e8e7e3; padding: 4px 8px; border-radius: 6px; }
+.flow { font: 11px ui-monospace, monospace; color: #9aa0aa; margin-top: 20px; }
+.ok { color: #15a06a; } .warn { color: #c2630b; }

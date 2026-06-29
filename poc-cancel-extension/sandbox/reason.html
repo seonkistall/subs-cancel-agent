@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>샌드박스 — 취소 사유</title>
+<link rel="stylesheet" href="sandbox.css" />
+</head>
+<body>
+  <div class="card">
+    <h1>취소 사유를 알려주세요</h1>
+    <p class="sub">이 입력은 <b>React-controlled처럼</b> 동작합니다 — .value를 직접 바꿔도 무시되고, 되돌려집니다. 엔진은 native setter + input 이벤트 dispatch로만 채울 수 있어야 합니다.</p>
+
+    <input type="text" id="reason-select" placeholder="예: 너무 비쌈" autocomplete="off" />
+
+    <div class="row">
+      <button id="reason-continue" class="primary" data-next="confirm.html" disabled>계속</button>
+    </div>
+    <p class="sub" id="rstate" style="margin-top:10px">framework state: <span id="fv" class="warn">(비어 있음 — 계속 비활성)</span></p>
+  </div>
+
+  <script src="sandbox.js"></script>
+  <script>
+    // Simulate a framework-controlled input.
+    (function () {
+      var input = document.getElementById('reason-select');
+      var cont = document.getElementById('reason-continue');
+      var fv = document.getElementById('fv');
+      var frameworkValue = ''; // the "real" state the app trusts
+
+      input.addEventListener('input', function () { frameworkValue = input.value; sync(); });
+
+      function sync() {
+        var empty = frameworkValue.trim() === '';
+        cont.disabled = empty;
+        fv.textContent = empty ? '(비어 있음 — 계속 비활성)' : '"' + frameworkValue + '" — 계속 활성';
+        fv.className = empty ? 'warn' : 'ok';
+      }
+
+      // Guard: any .value set WITHOUT a dispatched input event is reverted,
+      // forcing the native-setter + dispatch technique.
+      setInterval(function () {
+        if (input.value !== frameworkValue) { input.value = frameworkValue; }
+      }, 100);
+
+      sync();
+    })();
+  </script>
+</body>
+</html>
